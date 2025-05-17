@@ -1,0 +1,123 @@
+<div class="container py-5">
+  <div class="mb-4">
+    <a routerLink="/dashboard" class="text-decoration-none">
+      <i class="bi bi-arrow-left me-2"></i>Back to Dashboard
+    </a>
+  </div>
+
+  <div class="mb-4">
+    <h2 class="fw-bold">{{ isEditMode ? 'Edit' : 'Create' }} Event</h2>
+  </div>
+
+
+  <div class="card shadow-sm border-0">
+    <div class="card-body">
+      <form [formGroup]="checkoutFromGroup" (ngSubmit)="onSubmit()">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label for="name" class="form-label">Event Title</label>
+            <input type="hidden" formControlName="id" class="form-control" id="id">
+
+            <input type="text" class="form-control" id="name" formControlName="title" required>
+            <div *ngIf="title?.invalid && (title?.dirty || !title?.untouched)&&title?.errors?.['required']"
+                 class="text-danger small">
+              Event title is required.
+            </div>
+          </div>
+
+
+          <div class="col-md-6">
+            <label for="date" class="form-label">Date & Time</label>
+            <input type="datetime-local" class="form-control" id="date" formControlName="date" required>
+            <div *ngIf="date?.invalid && (date?.dirty || !date?.untouched)&& date?.errors?.['required']"
+                 class="text-danger small">
+              Date and time are required.
+            </div>
+          </div>
+
+
+          <div class="col-12">
+            <label for="description" class="form-label">Description</label>
+            <textarea class="form-control" formControlName="description" id="description" rows="4" required></textarea>
+            <div
+              *ngIf="description?.invalid && (description?.dirty || !description?.untouched)&& description?.errors?.['required']"
+              class="text-danger small">
+              Description is required.
+            </div>
+          </div>
+
+
+          <div class="col-md-6">
+            <label for="category" class="form-label">Category</label>
+            <select class="form-select" id="category" formControlName="category" (change)="onCategoryChange()" required>
+              <option value="" disabled selected>Select a category</option>
+              <option *ngFor="let item of categories" [value]="item.name">{{ item.name }}</option>
+            </select>
+            <div *ngIf="category?.invalid && (category?.dirty || !category?.untouched) && category?.errors?.['required']"
+                 class="text-danger small">
+              Category is required.
+            </div>
+          </div>
+
+
+          <div class="col-md-6">
+            <label for="venue" class="form-label">Venue</label>
+            <input type="text" class="form-control" formControlName="location" id="venue" name="venue" required>
+            <div *ngIf="location?.invalid && (location?.dirty || !location?.untouched ) && location?.errors?.['required']" class="text-danger small">
+                Venue is required.
+            </div>
+          </div>
+
+
+          <div class="col-md-6">
+            <label for="price" class="form-label">Price ($)</label>
+            <input type="number" class="form-control" id="price" formControlName="price" required min="0">
+            <div *ngIf="price?.invalid && (price?.dirty || !price?.untouched)&&price?.errors?.['required']"
+                 class="text-danger small">
+              Price is required.
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">Event Image</label>
+            <ngx-dropzone
+              (change)="onSelect($event)"
+              [accept]="'image/*'"
+              [multiple]="false"
+              class="border border-dashed p-4 bg-light text-center rounded">
+              <ngx-dropzone-label *ngIf="!imagePreview">
+                <i class="bi bi-upload display-4 text-muted"></i>
+                <p class="text-muted mb-0">Drag & drop or click to upload an image</p>
+              </ngx-dropzone-label>
+
+              <div *ngIf="imagePreview" class="position-relative">
+                <img [src]="imagePreview" class="img-fluid rounded" style="max-height: 200px;"/>
+                <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2"
+                        (click)="onRemove()">
+                  <i class="bi bi-x-lg"></i>
+                </button>
+              </div>
+            </ngx-dropzone>
+            <div *ngIf="imageError" class="text-danger small mt-1">{{ imageError }}</div>
+          </div>
+
+
+          <div class="d-flex justify-content-between mt-4">
+            <button type="button" class="btn btn-outline-secondary" routerLink="/admin">
+              Cancel
+            </button>
+            <button
+              type="submit"
+              class="btn btn-primary"
+              [disabled]="checkoutFromGroup.invalid">
+              <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2" role="status"
+                    aria-hidden="true"></span>
+              {{ isEditMode ? 'Update' : 'Create' }} Event
+            </button>
+          </div>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>

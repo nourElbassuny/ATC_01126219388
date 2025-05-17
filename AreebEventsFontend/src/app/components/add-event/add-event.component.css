@@ -1,0 +1,27 @@
+.card {
+  border-radius: 1rem;
+}
+
+.form-control, .form-select {
+  border-radius: 0.5rem;
+}
+
+h2 {
+  font-size: 2rem;
+}
+::ng-deep ngx-dropzone {
+  border: 2px dashed #ccc;
+  border-radius: 0.5rem;
+  background-color: #f9f9f9;
+}
+.upload-area {
+  border: 2px dashed #ccc;
+  padding: 30px;
+  text-align: center;
+  transition: border-color 0.3s;
+}
+
+.upload-area.dragging {
+  border-color: #3f51b5;
+  background-color: #f0f0ff;
+}

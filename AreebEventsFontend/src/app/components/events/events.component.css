@@ -1,0 +1,65 @@
+.card {
+  border: none;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+}
+.card-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.event-description {
+  flex-grow: 1;
+  margin-bottom: 1rem;
+  overflow: hidden;
+  color: #666;
+  line-height: 1.5;
+}
+.event-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btn {
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.btn-primary {
+  background-color: #3F51B5;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #303F9F;
+}
+
+.btn-outline {
+  background-color: transparent;
+  border: 1px solid #3F51B5;
+  color: #3F51B5;
+}
+
+.btn-outline:hover {
+  background-color: rgba(63, 81, 181, 0.1);
+}
+
+.booked-tag {
+  background-color: #4CAF50;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.pageable:hover{
+  cursor: pointer;
+}

@@ -1,0 +1,143 @@
+<div *ngIf="!event" class="text-center py-5">
+  <div class="spinner-border text-primary" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
+<div class="container py-5" *ngIf="event">
+  <div class="row mb-4">
+    <div class="col-12">
+      <a routerLink="/" class="text-decoration-none">
+        <i class="bi bi-arrow-left me-2"></i>Back to Events
+      </a>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-8 mb-4 mb-lg-0">
+      <img [src]="'data:image/jpeg;base64,'+event.photo" [alt]="event.title" class="img-fluid rounded shadow-sm mb-4" style="width: 100%; max-height: 400px; object-fit: cover;">
+
+      <h1 class="mb-3">{{ event.title }}</h1>
+
+      <div class="d-flex flex-wrap mb-4">
+        <span class="badge bg-primary me-2 mb-2">{{ event.category.name }}</span>
+        <span class="badge bg-secondary me-2 mb-2">
+             <i class="fa-solid fa-calendar me-1"></i>{{ event.date | date:'fullDate' }}
+            </span>
+        <span class="badge bg-secondary me-2 mb-2">
+              <i class="fa-solid fa-clock me-1"></i>{{ event.date | date:'shortTime' }}
+            </span>
+        <span class="badge bg-secondary mb-2">
+             <i class="fa-solid fa-location-dot me-1"></i>{{ event.location }}
+            </span>
+      </div>
+      <div class="mb-4">
+        <h5>About This Event</h5>
+        <p class="text-muted">{{ event.description }}</p>
+      </div>
+      <div>
+        <h5>Venue Information</h5>
+        <p class="text-muted">
+          {{ event.location }}
+        </p>
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <div class="card shadow-sm" style="top: 20px;">
+        <div class="card-body">
+          <h5 class="card-title">Book Your Tickets</h5>
+          <p class="card-text text-muted mb-1">
+            <i class="bi bi-calendar me-2"></i>{{ event.date | date:'fullDate' }}
+          </p>
+          <p class="card-text text-muted mb-3">
+            <i class="bi bi-clock me-2"></i>{{ event.date | date:'shortTime' }}
+          </p>
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <span class="fw-bold fs-4">price {{ event.price | currency}}</span>
+
+          </div>
+
+          <hr>
+
+          <div class="mb-3">
+            <h6>Ticket Summary</h6>
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <label for="ticketCount">Tickets:</label>
+              <input type="number" min="1" [(ngModel)]="ticketCount" id="ticketCount" class="form-control w-25 text-end" />
+            </div>
+
+            <div class="d-flex justify-content-between mt-2">
+              <span>1 × {{ ticketCount }} Tickets</span>
+              <span>{{  event.price | currency }}</span>
+            </div>
+            <div class="d-flex justify-content-between mt-2">
+              <span class="fw-bold">Total</span>
+              <span class="fw-bold">{{ ticketCount * event.price | currency }}</span>
+            </div>
+          </div>
+
+          <div *ngIf="isBooked" class="alert alert-success d-flex justify-content-between align-items-center" role="alert">
+            <div>
+              <i class="bi bi-check-circle me-2"></i>You've already booked this event!
+            </div>
+            <button class="btn btn-outline-danger btn-sm ms-3" (click)="cancelBooking()">
+              <i class="bi bi-x-circle me-1"></i>Cancel Booking
+            </button>
+          </div>
+
+          <button
+            *ngIf="!isBooked"
+            class="btn btn-primary w-100"
+            [disabled]="!isAuthenticated || isAdmin"
+            (click)="bookEvent()">
+            Book Now
+          </button>
+
+          <div *ngIf="!isAuthenticated" class="alert alert-warning mt-3" role="alert">
+            <i class="bi bi-exclamation-triangle me-2"></i>Please
+            <a routerLink="/login" [queryParams]="{returnUrl: 'auth/eventDetail/' + event.id,booked: false}" class="alert-link">login</a>
+            to book this event.
+          </div>
+
+          <div *ngIf="isAdmin" class="alert alert-danger mt-3" role="alert">
+            <i class="bi bi-x-circle me-2"></i>Sorry, Admin can't booking any event!
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" [class.show]="showConfirmation" [style.display]="showConfirmation ? 'block' : 'none'"
+     tabindex="-1" [attr.aria-hidden]="!showConfirmation">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title">
+          <i class="bi bi-check-circle me-2"></i>Booking Confirmed!
+        </h5>
+        <button type="button" class="btn-close btn-close-white" (click)="closeConfirmation()"></button>
+      </div>
+      <div class="modal-body text-center py-4">
+        <div class="mb-4">
+          <i class="bi bi-check-circle-fill text-success" style="font-size: 4rem;"></i>
+        </div>
+        <h4>Thank You for Your Booking!</h4>
+        <p class="mb-0">You have successfully booked a ticket for</p>
+        <p class="fw-bold mb-4">{{ event?.title }}</p>
+      </div>
+      <div class="modal-footer flex-column">
+        <button type="button" class="btn btn-outline-secondary w-100" routerLink="/">
+          View My Bookings
+        </button>
+        <button type="button" class="btn btn-outline-secondary w-100" routerLink="/">
+          Continue Browsing
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-backdrop fade show" *ngIf="showConfirmation"></div>
+
+
+

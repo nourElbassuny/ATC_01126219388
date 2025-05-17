@@ -1,0 +1,115 @@
+<div class="container">
+  <header class="py-5 text-center">
+    <h1 class="display-4">Discover Amazing Events</h1>
+    <p class="lead">Find and book the best events in your area.</p>
+  </header>
+
+  <div class="row mb-4">
+    <div class="col-md-6 offset-md-3">
+      <div class="input-group">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Search events..."
+          [(ngModel)]="searchTerm"
+          (input)="filterEvents(searchTerm)"
+          ngModel name="key" id="searchName" required>
+        <button class="btn btn-primary" type="button">
+          <i class="bi bi-search"></i> Search
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-4">
+    <div class="d-flex justify-content-center flex-wrap gap-2">
+      <button  class="btn"  [class.btn-primary]="selectedCategory ==='All' "
+               [class.btn-outline-primary]="selectedCategory !== 'All' " (click)="filterByCategory('All',0)">
+        All
+      </button>
+      <button
+        *ngFor="let category of AllEventsByCategory"
+        class="btn"
+        [class.btn-primary]="selectedCategory === category.name"
+        [class.btn-outline-primary]="selectedCategory !== category.name"
+        (click)="filterByCategory(category.name,category.id)">
+        {{ category.name }}
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="loadingEvents" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <div *ngIf="!loadingEvents && filterEventsList.length === 0" class="text-center py-5">
+    <h3>No events found</h3>
+    <p>Try adjusting your search or filters</p>
+  </div>
+  <div class="row" *ngIf="filterEventsList.length > 0">
+    <div class="col-lg-4 col-md-6 mb-4" *ngFor="let event of filterEventsList">
+      <div class="card h-100 fade-in">
+        <div class="position-relative">
+          <img [src]="'data:image/jpeg;base64,' + event.photo" class="card-img-top" [alt]="event.title"
+               style="height: 200px; object-fit: cover;">
+          <span class="badge bg-primary position-absolute top-0 end-0 m-2">{{ event.category.name }}</span>
+        </div>
+        <div class="card-body">
+          <h5 class="card-title"> {{ event.title }}</h5>
+          <p class="card-text text-muted mb-1">
+            <i class="fa-solid fa-calendar"></i>{{ event.date | date:'mediumDate' }}
+          </p>
+          <p class="card-text text-muted">
+            <i class="fa-solid fa-location-dot"></i> {{ event.location }}
+          </p>
+          <p class="event-description">{{ event.description | slice:0:120 }}...</p>
+          <p class="card-text fw-bold">{{ event.price | currency}}</p>
+
+          <div class="event-actions">
+            <button class="btn btn-outline"
+                    [routerLink]="['/auth/eventDetail', event.id]"
+                    [queryParams]="{booked: isBooked(event.id)}">
+              Details
+            </button>
+            @if (isBooked(event.id)) {
+              <span class="booked-tag">Booked</span>
+            } @else {
+              <button
+                class="btn btn-primary"
+                [routerLink]="['/auth/eventDetail', event.id]"
+                [queryParams]="{booked: isBooked(event.id)}">
+
+                Book Now
+              </button>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <nav *ngIf="totalPages > 1" class="d-flex justify-content-center mt-4">
+    <ul class="pagination">
+      <li class="page-item" [class.disabled]="currentPage === 0">
+        <a class="page-link pageable" (click)="goToPage(currentPage - 1)">Previous</a>
+      </li>
+      <li class="page-item" *ngIf="currentPage > 0">
+        <button class="page-link" (click)="goToPage(currentPage - 1)">
+          {{ currentPage }}
+        </button>
+      </li>
+      <li class="page-item active">
+        <span class="page-link">{{ currentPage + 1 }}</span>
+      </li>
+      <li class="page-item" *ngIf="currentPage + 1 < totalPages">
+        <button class="page-link" (click)="goToPage(currentPage + 1)">
+          {{ currentPage + 2 }}
+        </button>
+      </li>
+      <li class="page-item" [class.disabled]="currentPage >= totalPages - 1">
+        <a class="page-link pageable" (click)="goToPage(currentPage + 1)">Next</a>
+      </li>
+    </ul>
+  </nav>
+</div>
